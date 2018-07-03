@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guotl.set.dao.UserMapper">
+    <!-- 用户表 -->
+    <resultMap id="UserMapper" type="com.guotl.set.entity.sys.User">
+        <id property="id" column="id" jdbcType="INTEGER" />
+        <result property="username" column="username" jdbcType="VARCHAR" />
+        <result property="account" column="account" jdbcType="VARCHAR" />
+        <result property="password" column="password" jdbcType="VARCHAR" />
+        <result property="remarks" column="remarks" jdbcType="VARCHAR" />
+        <result property="age" column="age" jdbcType="INTEGER" />
+        <result property="state" column="state" jdbcType="INTEGER" />
+        <result property="sex" column="sex" jdbcType="INTEGER" />
+        <result property="note1" column="note1" jdbcType="VARCHAR" />
+        <result property="note2" column="note2" jdbcType="VARCHAR" />
+        <result property="datetime" column="datetime" jdbcType="TIMESTAMP" />
+        <result property="perminsStrlist" column="perminsStrlist" jdbcType="VARCHAR" />
+        <collection property="rolelist" column="rolelist" ofType="com.guotl.set.entity.sys.User_role">
+            <result property="user_id" column="user_id" jdbcType="INTEGER" />
+            <result property="role_id" column="role_id" jdbcType="INTEGER" />
+        </collection>
+    </resultMap>
+        <!-- 登录验证 -->
+    <select id="loginvalidate" parameterType="Map" resultMap="UserMapper">
+        SELECT * FROM sys_user
+         <where>  
+           <if test="username != null ">account=#{username} or username=#{username}</if>
+             <if test="pwd != null ">and password=#{pwd}</if>
+             </where>
+    </select>
+        <!-- 注册账号 -->
+    <insert id="init" parameterType="com.guotl.set.entity.sys.User">
+		insert into sys_user
+		(username, account,password)
+		values (#{username},#{account} , #{password})
+	</insert>
+    <!-- 单条验证 -->
+    <select id="finbyone" parameterType="Map" resultMap="UserMapper">
+        SELECT * FROM sys_user where #{key}=#{value}
+    </select>
+    <!-- 查询用户 -->
+   <!-- <select id="finbyone" parameterType="Map" resultMap="UserMapper">
+        SELECT * FROM sys_user
+    </select>-->
+</mapper>

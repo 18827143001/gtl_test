@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ZH-cn" >
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Guotl-login</title>
+  <link rel="stylesheet" href="../layui/css/layui.css">
+  <link rel="stylesheet" href="../exend/login/login.css">
+</head>
+
+<body>
+  <div class="kit-login">
+    <div class="kit-login-bg"></div>
+    <div class="kit-login-wapper">
+      <h2 class="kit-login-slogan">欢迎使用 <br> Guotl后台系统</h2>
+      <div class="kit-login-form">
+        <h4 class="kit-login-title">登录</h4>
+        <form class="layui-form">
+          <div class="kit-login-row">
+            <div class="kit-login-col">
+              <i class="layui-icon">&#xe612;</i>
+              <span class="kit-login-input">
+                <input type="text" name="loginName" id="id_username" lay-verify="required" placeholder="用户名/手机号" />
+              </span>
+            </div>
+            <div class="kit-login-col"></div>
+          </div>
+          <div class="kit-login-row">
+            <div class="kit-login-col">
+              <i class="layui-icon">&#xe64c;</i>
+              <span class="kit-login-input">
+                <input type="password" name="password" id="id_password" lay-verify="required" placeholder="密码" />
+              </span>
+            </div>
+            <div class="kit-login-col"></div>
+          </div>
+          <div class="kit-login-row">
+            <div class="kit-login-col">
+              <input type="checkbox" name="rememberMe" id="rememberMe" title="记住帐号" lay-skin="primary">
+            </div>
+          </div>
+          <div class="kit-login-row">
+            <button class="layui-btn kit-login-btn" lay-submit="submit" lay-filter="login_hash">登录</button>
+          </div>
+            <div  style="margin-bottom:0;">
+                <a href="javascript:;" style="color: rgb(153, 153, 153); text-decoration: none; font-size: 13px;" id="forgot">忘记密码</a>
+                <a href="javascript:;" style="color: rgb(153, 153, 153); text-decoration: none; font-size: 13px;  margin-left: 130px;" id="register">注册账号</a>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../layui/layui.js"></script>
+  <script src="../exend/login/cookie.js"></script>
+  <script>
+      //一般直接写在一个js文件中
+      layui.use(['layer', 'form'], function(){
+          var layer = layui.layer
+              ,$ = layui.jquery
+              ,form = layui.form;
+
+          $("#register").click(function () {
+              location.href = 'login/showreg';
+          });
+
+          //获取cookie
+          var cusername = getCookie('user');
+          var cpassword = getCookie('pswd');
+          var cjizhu = getCookie('jz');
+
+          if (cusername != "" && cpassword != "" && cjizhu != "") {
+              $("#id_username").val(cusername);
+              $("#id_password").val(cpassword);
+              $("#rememberMe").attr("checked", "checked");
+              form.render(); //更新全部
+          }
+
+          //提交
+          form.on('submit(login_hash)', function(obj){
+              var username=$("#id_username").val();
+              var pwd=$("#id_password").val();
+              $.post("login/log",{
+                  username : username,
+                  pwd : pwd
+              },function (result) {
+                  if (result!=0){
+                      layer.msg("登录成功")
+                      //复选框勾选状态发生改变时，如果未勾选则清除cookie
+                      if ($('#rememberMe').is(':checked')) {
+                          setCookie('user', $('#id_username').val().trim(), 7)
+                          setCookie('pswd', $('#id_password').val().trim(), 7)
+                          setCookie('jz', $('#rememberMe').val().trim(), 7)
+                      } else {
+                          delCookie('user');
+                          delCookie('pswd');
+                          delCookie('jz');
+                      }
+                      setTimeout(function() {
+                          window.sessionStorage.clear();
+                          location.href = 'login/index';
+                      }, 1000);
+                  }else{
+                      layer.msg("账号或者密码错误！")
+                  }
+
+              });
+              return false;
+          });
+      });
+  </script>
+</body>
+
+</html>

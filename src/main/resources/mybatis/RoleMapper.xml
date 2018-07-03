@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guotl.set.dao.RoleMapper">
+    <!-- 用户表 -->
+    <resultMap id="RoleMapper" type="com.guotl.set.entity.sys.Role">
+        <id property="id" column="id" jdbcType="INTEGER" />
+        <result property="role" column="role" jdbcType="VARCHAR" />
+        <result property="description" column="description" jdbcType="VARCHAR" />
+        <result property="remarks" column="remarks" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 单条验证 -->
+    <select id="finbyone" parameterType="Map" resultMap="RoleMapper">
+        SELECT * FROM sys_user where #{key}=#{value}
+    </select>
+</mapper>

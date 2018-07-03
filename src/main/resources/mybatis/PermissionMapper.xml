@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.guotl.set.dao.PermissionMapper">
+    <!-- 用户表 -->
+    <resultMap id="perMapper" type="com.guotl.set.entity.sys.permission">
+        <id property="id" column="id" jdbcType="INTEGER" />
+        <result property="name" column="name" jdbcType="VARCHAR" />
+        <result property="resourceType" column="resourceType" jdbcType="INTEGER" />
+        <result property="url" column="url" jdbcType="VARCHAR" />
+        <result property="permission" column="permission" jdbcType="VARCHAR" />
+        <result property="pid" column="pid" jdbcType="INTEGER" />
+        <result property="icon" column="icon" jdbcType="VARCHAR" />
+        <result property="state" column="state" jdbcType="VARCHAR" />
+        <result property="belong" column="belong" jdbcType="INTEGER" />
+        <result property="remarks" column="remarks" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 单条验证 -->
+    <select id="finbyone" parameterType="Map" resultMap="perMapper">
+        SELECT * FROM sys_permission where #{key}=#{value}
+    </select>
+    <!-- 根据用户id查询权限菜单 -->
+    <select id="getperid" parameterType="java.lang.Integer" resultMap="perMapper">
+         SELECT a.* FROM sys_permission a,sys_role_permission b,sys_user_role c  where a.id=b.permission_id AND c.role_id=b.role_id AND #{id}=c.user_id
+    </select>
+
+</mapper>

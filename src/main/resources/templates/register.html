@@ -1,0 +1,110 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册 - Guotl</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../exend/register/admin.css" media="all">
+    <link rel="stylesheet" href="../exend/register/login.css" media="all">
+</head>
+<body>
+
+
+<div class="layadmin-user-login layadmin-user-display-show kit-login-bg" id="LAY-user-login" style="display: none;">
+    <div class="layadmin-user-login-main">
+        <div class="layadmin-user-login-box layadmin-user-login-header">
+            <h2>Guotl</h2>
+            <p style="color: #c2c2c2">请输入注册账号信息</p>
+        </div>
+        <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-cellphone" for="LAY-user-login-cellphone"></label>
+                <input type="text" name="cellphone" id="LAY-user-login-cellphone" lay-verify="phone" placeholder="账号" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                <input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-repass"></label>
+                <input type="password" name="repass" id="LAY-user-login-repass" lay-verify="required" placeholder="确认密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-nickname"></label>
+                <input type="text" name="nickname" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="昵称" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit">注 册</button>
+            </div>
+            <div class="layui-trans layui-form-item layadmin-user-login-other">
+
+
+                <a href="#" id="log" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-trans layadmin-user-login-footer">
+        <p style="color: #cccccc">© 2018-6-1 <a style="color: #cccccc" target="_blank">Guotl</a></p>
+    </div>
+
+</div>
+
+<script src="../layui/layui.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+            ,$ = layui.jquery
+            ,form = layui.form;
+
+        form.render();
+        //回到登录界面
+        $("#log").click(function () {
+            location.href = 'login/index1';
+        });
+        //提交
+        form.on('submit(LAY-user-reg-submit)', function(obj){
+            var field = obj.field;
+            //确认密码
+            if(field.password !== field.repass){
+                return layer.msg('两次密码输入不一致');
+            }
+            //名称不能为空
+            if(!field.nickname){
+                return layer.msg('名称不能为空');
+            }
+
+            //是否同意用户协议
+            if(!field.agreement){
+                return layer.msg('你必须同意用户协议才能注册');
+            }
+
+            $.post("regoster",{
+                data : JSON.stringify(obj.field)
+            },function (result) {
+                if(result>0&&result!=99){
+                    location.href = '/*';
+                }else if (result=99) {
+                    layer.msg("该账号已被注册！");
+                }else{
+                    layer.msg("注册失败，请联系管理员QQ：997720021");
+                }
+            });
+            return false;
+        });
+
+
+
+    });
+</script>
+</body>
+</html>
